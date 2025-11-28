@@ -1,6 +1,7 @@
 import json
 from dataclasses import dataclass
 from typing import Optional, List, Dict
+import os
 
 
 @dataclass
@@ -12,7 +13,13 @@ class ReservationResult:
 
 
 class ReservationAgent:
-    def __init__(self, tables_path: str = "data/tables.json") -> None:
+    def __init__(self, tables_path: str = None) -> None:
+        if tables_path is None:
+            # Chemin absolu basé sur l'emplacement de ce fichier
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            project_root = os.path.dirname(current_dir)
+            tables_path = os.path.join(project_root, "data", "tables.json")
+        
         self.tables_path = tables_path
         self.tables = self._load_tables()
 
@@ -46,5 +53,5 @@ class ReservationAgent:
         # 3. Aucune table du tout
         return ReservationResult(
             success=False,
-            message="Aucune table n’est disponible."
+            message="Aucune table n'est disponible."
         )
